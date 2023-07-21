@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfect Pizza</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="pizza.js"></script>
+    <style>
+        /* Custom CSS to put three flavors per row */
+        .pizza-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .pizza {
+            flex-basis: calc(33.33% - 10px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body x-data="PizzaCart" style="background-image: url(believe.jpg.jpg);"style="background-size:cover",class="colooor">
+    <center><h1 x-text="title"></h1></center>
+
+    <div  class="container" x-data="{
+        cart: [],
+        message: null,
+        isError: false,
+        smallCount: 0,
+        mediumCount: 0,
+        largeCount: 0,
+        smallPrice: 54,
+        mediumPrice: 85,
+        largePrice: 129,
+        amount: null,
+        addToCart: function (size, price, count) {
+            if (count > 0) {
+                this.cart.push({
+                    size: size,
+                    price: price,
+                    count: count
+                });
+            }
+        },
+        removeFromCart: function (index) {
+            this.cart.splice(index, 1);
+        },
+        calculateTotal: function () {
+            let total = 0;
+            this.cart.forEach(function (item) {
+                total += item.price * item.count;
+            });
+            return total;
+        },
+        payBill() {
+            const total = this.calculateTotal();
+            if (this.amount >= total) {
+                // show success
+                this.message = 'Enjoy your meal';
+                this.isError = false;
+            } else {
+                // you broke
+                this.message = 'insufficient amount';
+                this.isError = true;
+            }
+
+            setTimeout(() => {
+                this.message = null;
+                alert(this.message);
+            }, 2000);
+        }
+    }" x-init="init()">
+        <div class="cart">
+            <!-- Cart content will be displayed here -->
+            
+            <div>Username: <input type="text" x-model="Username" ></div>
+            <button x-on:click="login" x-show="username">Login</button>
+            <button x-on:click="logout" x-show="username && cartId" >Logout</button>
+            <div x-show="cartId">
+                Cart Code: <span x-text="cartId" ></span>
+            </div>
+        </div>
+
+        <div style="color: rgb(100, 213, 223);" x-show="cartTotal > 0">
+            <h2>Your Cart</h2>
+            <div class="message" x-text="message"></div>
+            <table>
+                <!-- Table content for the cart will be here -->
+                <tr>
+                    <th>Flavour</th>
+                    <th>Size</th>
+                    <th>Price</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                </tr>
+                <template x-for="(pizza, index) in cartData">
+                    <tr>
+                        <td x-text="pizza.flavour"></td>
+                        <td x-text="pizza.size"></td>
+                        <td x-text="pizza.price"></td>
+                        <td>
+                            <button x-on:click="addToCart(pizza.size, pizza.price, 1)">+</button>
+                            <span x-text="pizza.count"></span>
+                            <button x-on:click="removeFromCart(index)">-</button>
+                        </td>
+                        <td x-text="pizza.price * pizza.count"></td>
+                    </tr>
+                </template>
+                <tr>
+                    <td colspan="3">Total</td>
+                    <td colspan="2">R <span x-text="calculateTotal()"></span> </td>
+                </tr>
+                <tr>
+                    <td colspan="3">Pay now</td>
+                    <td>
+                        <input type="text" x-model="amount">
+                    </td>
+                    <td>
+                        <button @click="payBill()">Pay</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <hr>
+    <br> 
+
+    <h1 x-text="title"></h1>
+
+    <!-- Updated section for pizza selection -->
+    <div class="pizza-list">
+        <template x-for="pizza in pizzas">
+            <div class="pizza">
+                <h5 x-text="pizza.flavour"></h5>
+                <span x-text="pizza.size"></span>
+                <strong>
+                    R<span x-text="pizza.price"></span>
+                </strong>
+                <div>
+                    <button class="btn" x-on:click="addPizzaToCart(pizza.id)">Add to cart</button>
+                </div>
+            </div>
+        </template>
+    </div>
+</body>
+</html>
+

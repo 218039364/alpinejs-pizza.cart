@@ -1,0 +1,29 @@
+.pizza {
+    border: 1px solid;
+    margin-bottom: 1em;
+    padding: 1em;
+    display: inline-block;
+}
+.button {
+    margin-right: 10px; /* Adjust the margin as per your desired spacing */
+}
+
+.error {
+  color: red;
+}
+
+.message {
+  color: rgb(0, 255, 60);
+}
+
+
+.body{
+
+  background-image: url(pizza.png);
+  background-size: cover;
+
+}
+
+.colooor {
+  color: aliceblue;
+}
